@@ -121,22 +121,3 @@ class GameBoard{
 	return true;	
     }
 }
-
-
-
-    
-
-
-    /*
-        Scanner in = new Scanner(System.in);
-        System.out.print( "Give me the coin number you wish to move");
-        int cn = in.nextInt();
-        System.out.print( "Give me a number of spaces");
-        int ns = in.nextInt(); 
-    */ 
-       
-
-      
-
-	    
-    
