@@ -8,31 +8,31 @@
  *
  * Thought Questions
  * 1) In order to control the %chance of a certain number of coins, one would 
- *have to restricted the number of coinsin such a way that given the
+ * have to restrict the number of coins in such a way that given the
  * distribution yields the desired % chance of the target number of coins.
  * So for a 50% chance of a game with 3 coins the random number generator
  * for the the numCoins would be between 3 and 4. For a 25% chance of a game
  * with 4 coins numCoins would be between 3 and 6. This technique makes me 
  * want to use a Vector for the numCoins so it can be expanded.
  * 2) To generate a game without an immediate win, one would have to ensure
- * that the gameboard does not have n-1 coins all in the first n-1 indices
+ * that the gameboard does not have n-1 coins all in the first numCoins indices
  * of the board, because the one move, on the nth coin will put all coins
- * in the winning positions.If you wanted to guaruntee yourself n moves then
+ * in the winning positions. If you wanted to guaruntee yourself n moves then
  * the number of moves is equal to the number coins as long as no coin is at
- * index zero.
- * 3) if the computer could scan the gameboard and tell which player was going
+ * index zero (if you perform the best move each time).
+ * 3) If the computer could scan the gameboard and tell which player was going
  * to win based on the least number of moves, then the computer could give a
  * hint prompting the predicted loosing player to make a defensive move in
  * which they don't move a coin all the way to the winning/final position. Thus
- * one would have to create a way to keep track of the coins and there final or
+ * one would have to create a way to keep track of the coins and their final or
  * winning positions. It could be an array based on an array of the coin's 
  * initial positions.
- * 4) If my coinstrip class had two methods call optimalCoin()whcih selects
+ * 4) If my coinstrip class had two methods call optimalCoin() which selects
  * a coin and optimalSpaces(int coinNum) which determines how many spaces to
  * move the coinNum-th coin. The computerPlay() method could be written so that
  * for the gameboard, the computer scans to determine the number of moves until
  * checkWin() returns true. If the computer is always going in response to the
- * human user then if thenumber of moves until checkWin() is true is an even 
+ * human user then if the number of moves until checkWin() is true is an even 
  * number, then the computer will win, but if the number of moves is odd then
  * the user will win. Therefore in the case where the computer wins, the 
  * computerPlay() method will call the optimalCoin() and optimalSpaces() 
@@ -41,13 +41,13 @@
  * moves for a win changes from computer wins to player wins, then the method
  * defensiveMove() could be called in this case so that the optimalCoin() is 
  * moved a sub optimal number of spaces. This could be acheived simply by doing
- * the optimalSpaces() getting the int that returns and subtracting 1 (or 
+ * the optimalSpaces() getting the int that it returns and subtracting 1 (or 
  * any number of spaces as long as it is legal). I would change the prompts
  * going to two players to only going to one player. Also the winner print
  * statement would change to either player wins or computer wins.
  * 5) This modification wouldn't change my implementation significantly 
- * because all I would have to change is the checkMove method and change in
- * in the seconf for loop how if the elements are not zero then return false 
+ * because all I would have to change is the checkMove() method and change in
+ * in the second for-loop if the elements are not zero then return false 
  * and change that to return true.
  */
 
@@ -55,19 +55,23 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
+/*
+ * Description: The class CoinStrip creates the gameboard (which had                             
+ * been stored as an array), prints the current state of the board,                            
+ * prompts the user, uses methods from the GameBoard class, prints a      
+ * string displaying which player won the game.                                                      
+ */
 public class CoinStrip {
     public static void main(String [] args){
 	GameBoard gameBoard = new GameBoard();
 	System.out.println(gameBoard);
 
 	Scanner in = new Scanner(System.in);
-
+  
 	/* used to keep track of which player is requesting the moves*/
 	int player = 1;
 
-	/* continue this loop until check.Win returns true,
-	 * or until someone wins
-	 */
+	/* continue this loop until checkWin returns true (someone has won)*/
 	while(!gameBoard.checkWin()){
 	    
 	    /* prompts user for the cn, coin number, and the ns,
@@ -75,9 +79,11 @@ public class CoinStrip {
 	     */
 	    int cn, ns;
 	    while (true) {
-		System.out.print("Player " + player + ", give me the coin number you wish to move ");
+		System.out.print("Player " + player + 
+				 ", give me the coin number you wish to move ");
 		cn = in.nextInt();
-		System.out.print("Player " + player + ", give me a number of spaces ");
+		System.out.print("Player " + player +
+				 ", give me a number of spaces ");
 		ns = in.nextInt();
 		
 		/* if the move requested is legal, break the loop 
@@ -105,7 +111,10 @@ public class CoinStrip {
     }
 }
 
-/* creates the gameboard and stores it as an array*/    
+/* creates the gameboard and stores it as an array and contains methods
+ * for moving a coin, checking a legal move, checking a win and prints
+ * representation
+ */    
 class GameBoard{
     Random rand = new Random();
     protected int[] gameBoard;
@@ -122,9 +131,7 @@ class GameBoard{
 	/* keeps track of the number of coins currently on the board*/
 	int coinsInserted = 0;
 
-	/* continues to insert coins on the gameboard until coins on the board 
-	 * is equal to the number of coins the game is to be played with
-	 */
+	
 	while (coinsInserted < numCoins){
 	    int coinPosition = rand.nextInt(boardSize);
 	    if (gameBoard[coinPosition] == 0){
